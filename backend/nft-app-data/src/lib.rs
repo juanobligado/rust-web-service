@@ -1,10 +1,8 @@
-use tokio_postgres::{Error, GenericClient, Row};
+extern crate nft_app_model;
+extern crate tokio_postgres;
 
-#[derive(Debug, serde::Serialize)]
-pub struct User {
-    pub id: i32,
-    pub login: String,
-}
+use tokio_postgres::{Error, GenericClient, Row};
+use nft_app_model::User;
 
 impl From<Row> for User {
     fn from(row: Row) -> Self {

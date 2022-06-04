@@ -1,14 +1,4 @@
 services:
-  frontend:
-    build:
-      context: frontend
-      target: development
-    networks:
-      - client-side
-    ports:
-      - 3000:3000
-    volumes:
-      - ./frontend/src:/code/src:ro
 
   backend:
     build:
@@ -22,7 +12,6 @@ services:
       - PG_USER=postgres
       - PG_PASSWORD=mysecretpassword
     networks:
-      - client-side
       - server-side
     volumes:
       - ./backend/src:/code/src
@@ -43,7 +32,6 @@ services:
       - db-data:/var/lib/postgresql/data
 
 networks:
-  client-side: {}
   server-side: {}
 
 volumes:

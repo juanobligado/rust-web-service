@@ -1,8 +1,8 @@
 use actix_web::{get, web, App, HttpResponse, HttpServer};
 use deadpool_postgres::Pool;
 
-mod postgres;
-mod user;
+extern crate nft_app_data_deploy;
+extern crate nft_app_data;
 
 #[get("/users")]
 async fn list_users(pool: web::Data<Pool>) -> HttpResponse {
@@ -13,7 +13,7 @@ async fn list_users(pool: web::Data<Pool>) -> HttpResponse {
             return HttpResponse::InternalServerError().json("unable to get postgres client");
         }
     };
-    match user::User::all(&**client).await {
+    match nft_app_data::User::all(&**client).await {
         Ok(list) => HttpResponse::Ok().json(list),
         Err(err) => {
             log::debug!("unable to fetch users: {:?}", err);
@@ -30,8 +30,8 @@ fn address() -> String {
 async fn main() -> std::io::Result<()> {
     env_logger::init();
 
-    let pg_pool = postgres::create_pool();
-    postgres::migrate_up(&pg_pool).await;
+    let pg_pool = nft_app_data_deploy::create_pool();
+    nft_app_data_deploy::migrate_up(&pg_pool).await;
 
     let address = address();
     HttpServer::new(move || {
